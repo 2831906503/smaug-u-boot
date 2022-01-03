@@ -55,10 +55,17 @@ config TARGET_CHROMEBOOK_SAMUS
 	  Chrome OS EC connected on LPC, and it provides a 2560x1700 high
 	  resolution touch-enabled LCD display.
 
+config TARGET_GOOGLE_SMAUG
+	bool "Google Smaug"
+	help
+	  Google Smaug TODO.
+
+
 endchoice
 
 source "board/google/chromebook_link/Kconfig"
 source "board/google/chromebox_panther/Kconfig"
 source "board/google/chromebook_samus/Kconfig"
+source "board/google/smaug/Kconfig"
 
 endif

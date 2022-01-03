@@ -1,0 +1,12 @@
+if TARGET_GOOGLE_SMAUG
+
+config SYS_BOARD
+	default "smaug"
+
+config SYS_VENDOR
+	default "google"
+
+config SYS_CONFIG_NAME
+	default "google-smaug"
+
+endif

@@ -1,0 +1,149 @@
+/dts-v1/;
+
+#include "tegra210.dtsi"
+
+/ {
+	model = "Google Smaug";
+	compatible = "google,smaug", "nvidia,tegra210";
+
+	chosen {
+		stdout-path = &uarta;
+	};
+
+	aliases {
+		i2c1 = "/i2c@7000c000"; /* i2c-hid-dev@20 */
+		i2c2 = "/i2c@7000c400"; /* ec@1e */
+		i2c3 = "/i2c@7000c500"; /* tpm@20 */
+		i2c5 = "/i2c@7000d000"; /* max77620@3c max77621@1b max77621@1c */
+		i2c6 = "/i2c@7000d100"; /* jdi-lpm102a188a@2c audio-codec@2d temperature-sensor@4c */
+		mmc0 = "/sdhci@700b0600"; /* emmc */
+		usb0 = "/usb@7d000000";
+		spi0 = "/spi@70410000"; /* SPI flsh */
+	};
+
+	memory {
+		reg = <0x0 0x80000000 0x0 0xc0000000>;
+	};
+
+	pcie-controller@01003000 {
+		status = "okay";
+
+		pci@1,0 {
+			status = "okay";
+		};
+
+		pci@2,0 {
+			status = "okay";
+		};
+	};
+
+	padctl@7009f000 {
+		pinctrl-0 = <&padctl_default>;
+		pinctrl-names = "default";
+
+		padctl_default: pinmux {
+			xusb {
+				nvidia,lanes = "otg-1", "otg-2";
+				nvidia,function = "xusb";
+				nvidia,iddq = <0>;
+			};
+
+			usb3 {
+				nvidia,lanes = "pcie-5", "pcie-6";
+				nvidia,function = "usb3";
+				nvidia,iddq = <0>;
+			};
+
+			pcie-x1 {
+				nvidia,lanes = "pcie-0";
+				nvidia,function = "pcie-x1";
+				nvidia,iddq = <0>;
+			};
+
+			pcie-x4 {
+				nvidia,lanes = "pcie-1", "pcie-2",
+					       "pcie-3", "pcie-4";
+				nvidia,function = "pcie-x4";
+				nvidia,iddq = <0>;
+			};
+
+			sata {
+				nvidia,lanes = "sata-0";
+				nvidia,function = "sata";
+				nvidia,iddq = <0>;
+			};
+		};
+	};
+
+	sdhci@700b0600 {
+		status = "okay";
+		bus-width = <8>;
+		non-removable;
+	};
+
+	i2c@7000c000 {
+		status = "okay";
+		clock-frequency = <100000>;
+	};
+
+	i2c@7000c400 {
+		status = "okay";
+		clock-frequency = <100000>;
+	};
+
+	i2c@7000c500 {
+		status = "okay";
+		clock-frequency = <400000>;
+	};
+
+	i2c@7000d000 {
+		status = "okay";
+		clock-frequency = <100000>;
+	};
+
+	i2c@7000d100 {
+		status = "okay";
+		clock-frequency = <400000>;
+	};
+
+	usb@7d000000 {
+		status = "okay";
+		dr_mode = "otg";
+		nvidia,vbus-gpio = <&gpio TEGRA_GPIO(CC, 4) GPIO_ACTIVE_HIGH>;
+	};
+
+	spi@70410000 {
+		status = "okay";
+		spi-max-frequency = <24000000>;
+		spi@0 {
+			compatible = "w25q128fw";
+			reg = <0>;
+			spi-max-frequency = <24000000>;
+
+			controller-data {
+				nvidia,x1-len-limit = <16>;
+				nvidia,x1-bus-speed = <24000000>;
+				nvidia,x1-dummy-cycle = <0>;
+				nvidia,x4-bus-speed = <24000000>;
+				nvidia,x4-dummy-cycle = <8>;
+			};
+		};
+	};
+
+	clocks {
+		compatible = "simple-bus";
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		clk32k_in: clock@0 {
+			compatible = "fixed-clock";
+			reg = <0>;
+			#clock-cells = <0>;
+			clock-frequency = <32768>;
+		};
+	};
+};
+
+&uarta {
+	status = "okay";
+};
